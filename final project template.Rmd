@@ -8,6 +8,7 @@ output: pdf_document
   
 ```{r, echo=FALSE}
 library(knitr)
+library(ggplot2)
 opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
 ```
 
@@ -37,9 +38,35 @@ names(hpop)[names(hpop) == "X.Most.important..Which.of.the.following.do.you.cons
 names(hpop)[names(hpop) == "X.Second.most.important..Which.of.the.following.do.you.consider.to.be.the.most.and.second.most.important.goals.of.U.S..foreign.policy."] <- "second"
 
 
-hpop_clean = subset(hpop, select = c(education, income, urbanization, climate_opinion, first, second))
+hpop_clean <- subset(hpop, select = c(education, income, urbanization, climate_opinion, first, second))
 
-hpop_clean$climate <- ifelse(hpop_clean['climate_opinion'] == "It's a crisis and demands urgent action", 3, ifelse(hpop_clean['climate_opinion'] == "It's a problem, but we don't need urgent action now; other issues are more important", 2, ifelse(hpop_clean['climate_opinion'] == "It's not a problem; attempting to address is will be harmful to the economy", 1, NA)))
+hpop_clean <- subset(hpop_clean, hpop_clean['urbanization'] != 'Refused')
+hpop_clean <- subset(hpop_clean, hpop_clean['climate_opinion'] != 'Refused')
+
+hpop_clean$urbanization <- ifelse(hpop_clean['urbanization'] == 'Rural', "Rural", ifelse(hpop_clean['urbanization'] != 'Refused', "Non-rural", NA))
+
+na.omit(hpop_clean)
+
+hpop_clean$climate <- ifelse(hpop_clean['climate_opinion'] == "It's a crisis and demands urgent action", 2, ifelse(hpop_clean['climate_opinion'] == "It's a problem, but we don't need urgent action now; other issues are more important", 1, 0))
+
+hpop_clean$income_category <- ifelse(hpop_clean['income'] == 'Less than $5,000' |
+                                       hpop_clean['income'] == '$5,000 to $7,499' |
+                                       hpop_clean['income'] == '$7,500 to $9,999' |
+                                       hpop_clean['income'] == '$10,000 to $12,499' |
+                                       hpop_clean['income'] == '$12,500 to $14,999' |
+                                       hpop_clean['income'] == '$15,000 to $19,999' |
+                                       hpop_clean['income'] == '$20,000 to $24,999' |
+                                       hpop_clean['income'] == '$25,000 to $29,999' |
+                                       hpop_clean['income'] == '$30,000 to $34,999' |
+                                       hpop_clean['income'] == '$35,000 to $39,999',
+                                       'lower', ifelse(hpop_clean['income'] == '$40,000 to $49,999' |
+                                                   hpop_clean['income'] == '$50,000 to $59,999' |
+                                                   hpop_clean['income'] == '$60,000 to $74,999' |
+                                                   hpop_clean['income'] == '$75,000 to $84,999' |
+                                                   hpop_clean['income'] == '$85,000 to $99,999' |
+                                                   hpop_clean['income'] == '$100,000 to $124,999' |
+                                                   hpop_clean['income'] == '$125,000 to $149,999', 'middle', 'upper'))
+
 
 hs <- subset(hpop_clean, hpop_clean$education == "High school")
 lesshs <- subset(hpop_clean, hpop_clean$education == "Less than high school")
@@ -69,7 +96,7 @@ summary(hpop_clean$climate)
 
 ```{r, echo = FALSE}
 # Dependent variable plot here
-hist(hpop_clean$climate)
+ggplot(data = hpop_clean, aes(climate)) + geom_bar(fill = "#0073C2FF")
 ```
 
 - What is your independent variable and how is it coded? If you cleaned your data in some way, how did you do it? (i.e.. recoded data from percent to decimal, dropped some irrelevant responses, etc.)
@@ -82,8 +109,7 @@ summary(hpop_clean$education)
 
 ```{r, echo = FALSE}
 # Independent variable plot here
-ggplot(data = hpop_clean, aes(education)) + geom_bar(fill = "#0073C2FF") +
-  theme_pubclean()
+ggplot(data = hpop_clean, aes(education)) + geom_bar(fill = "#0073C2FF")
 ```
 
 - Are you considering any confounders? How are they coded?
@@ -101,21 +127,35 @@ Your results paragraphs should answer the following questions:
 
 averages_education <- c('Less than HS diploma' = mean(lesshs$climate), 'HS Diploma' = mean(hs$climate), 'Some College' = mean(someColl$climate), 'Bachelors or Higher' = mean(bacc$climate))
 
-barplot(xlab = 'Education Level', ylab = 'Climate Attitude', ylim = c(0,3), averages_education)
+barplot(xlab = 'Education Level', ylab = 'Climate Attitude', ylim = c(0,2), averages_education)
 ```
 
 - If using linear model: what are your bivariate regression results? Interpret your coefficient of interest, and comment on the statistical significance. Do you think your result represents a causal effect?
 
 ```{r, echo = FALSE}
 # Bivariate regression results here
+hpop_clean$education <- factor(hpop_clean$education, levels = c("Less than high school", "High school", "Some college", "Bachelor's degree or higher"))
+model1 <- lm(climate ~ 
+              education, data = hpop_clean, na.action = na.omit)
+coef(model1)
+summary(model1)
 
+ggplot(data=hpop_clean, aes(x=education, y=climate))+geom_point()+geom_abline(intercept = coef(model1)['(Intercept)'], slope=coef(model1)['education']) + geom_jitter(height = 0.1)
+
+ggplot(data=hpop_clean, aes(x))
 ```
 
 - Do your results change when you add confounders? Interpret your coefficient of interest, and comment on the statistical significance. Do you think your result represents a causal effect?
 
 ```{r, echo = FALSE}
 # Multivariate regression results here
-
+hpop_clean$urbanization <- factor(hpop_clean$urbanization, levels=c("Rural", "Non-rural"))
+model2 <- lm(climate ~ 
+              education + 
+              income_category + 
+              urbanization, data = hpop_clean, na.action = na.omit)
+coef(model2)
+summary(model2)
 ```
 
 
