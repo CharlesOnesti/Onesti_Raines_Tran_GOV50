@@ -2,7 +2,9 @@
 title: "Final Project"
 author: "Charles Onesti, Thuan Tran, Cole Raines"
 date: "Date"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
   
   
@@ -17,9 +19,20 @@ opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
 Intro paragraph(s) here:
 
 - What is your research question? 
+
+Are people with higher levels of education more likely to care about the issue of climate change?
+
 - Why do we care/why is it interesting? 
+
+With climate change likely to be a defining issue for our generation, it is crucial to understand what influences individual's beliefs surrounding climate change. Furthermore, with Harvard recently pledging net-zero investment in greenhouse gas emissions by 2050, questions begin to arise about the role higher education institutions play in combating climate change. As such, we hope to look at how the education itself changes and contributes to one's understanding of climate change.
+
 - What are your hypotheses? 
+
+We hypothesize that those with higher levels of education will be more likely to care about the issue of climate change. We believe that by attending lectures and becoming more educated on the subject of climate change, individuals will be more likely to care as they will have a better understanding of the severity and urgency of climate change.
+
 - What method will you use to test these hypotheses?
+
+In order to test this hypothesis, we will use a linear regression model.
 
 
 # Data Section
@@ -81,12 +94,20 @@ Data explanation here:
 
 What is your dataset?
   We are using the Harvard Public Opinions Poll dataset.  
-    + what is the size of your dataset?
+    + What is the size of your dataset?
       Our sample has 3022 units and 196 variables.  In our study, we only look at information from 6 of these variables. 
     + What is the unit of analysis?
+      Our unit of analysis is the individuals surveyed.
     + What is your research design (cross sectional, randomized experiment, etc)
+      In this analysis, we use a survey research design.
 - What is your dependent variable and how is it coded? If you cleaned your data in some way, how did you do it? (i.e. recoded data from percent to decimal, dropped some irrelevant responses, etc.)
 
+Our dependent variable is people's opinon on climate change. We are using the respondents' answer to the following question: Which of the following statements comes closest to your view regarding climate change? We have coded the responses below:
+
+  0-It's not a problem; attempting to address is will be harmful to the economy
+  1-It's a problem, but we don't need urgent action now; other issues are more important
+  2-It's a crisis and demands urgent action
+  
 ```{r, echo = FALSE}
 # Dependent variable summary statistics here
 summary(hpop_clean$climate)
@@ -142,7 +163,6 @@ summary(model1)
 
 ggplot(data=hpop_clean, aes(x=education, y=climate))+geom_point()+geom_abline(intercept = coef(model1)['(Intercept)'], slope=coef(model1)['education']) + geom_jitter(height = 0.1)
 
-ggplot(data=hpop_clean, aes(x))
 ```
 
 - Do your results change when you add confounders? Interpret your coefficient of interest, and comment on the statistical significance. Do you think your result represents a causal effect?
