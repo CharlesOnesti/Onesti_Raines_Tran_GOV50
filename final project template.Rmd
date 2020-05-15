@@ -122,6 +122,13 @@ ggplot(data = hpop_clean, aes(climate)) + geom_bar(fill = "#0073C2FF")
 
 - What is your independent variable and how is it coded? If you cleaned your data in some way, how did you do it? (i.e.. recoded data from percent to decimal, dropped some irrelevant responses, etc.)
 
+Our independent variable is education with their highest level of education attained being the metric. We have coded it so that respondents fall into one of four categories:
+  
+  -High school
+  -Less than high school
+  -Some college
+  -Bachelor's degree or higher
+  
 ```{r, echo = FALSE}
 # Independent variable summary statistics here
 summary(hpop_clean$education)
@@ -134,6 +141,7 @@ ggplot(data = hpop_clean, aes(education)) + geom_bar(fill = "#0073C2FF")
 ```
 
 - Are you considering any confounders? How are they coded?
+
 We are looking into income category and home urbanization as possible confounding variables. In the dataset there is detailed income bracket data which we have categorized into three buckets from lower, middle, and upper to observe the main trends
 
 # Results
@@ -141,6 +149,8 @@ We are looking into income category and home urbanization as possible confoundin
 Your results paragraphs should answer the following questions:
 
 - What is the observed relationship when you plot it?
+
+When plotting education level and climate attitude, there is a clear relationship between the two. Looking at the bar plot below, we can see that having a higher level of education is assocaited with a stronger attitdue towards combatting climate change and believing that it is more urgent.
 
 ```{r, echo = FALSE}
 # Scatter plot here
