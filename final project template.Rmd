@@ -192,9 +192,16 @@ summary(model2)
 # Conclusion
 
 - Summarize your findings. Is your hypothesis supported by your results?
+
+In this analysis, we have found that as education increases, on average, one's concern for climate increases as well controlling for income and urbanization. This supports our hpyothesis that those with higher levels of education will be more likely to care about the issue of climate change.
+
 - What are some limitations to your analysis? Do you think you have identified a causal effect? Why or why not?
+
+Our analysis is limited because we cannot randomly assign education due to ethical and financial restraints. Thus, it is difficult to tell whether education is causing people to become more concerned about climate change, or people who are more likely to care about issues such as climate change go on to obtain education. We cannot say for certain that we have identified a casual effect since the respondents were not randomly assigned. However, our results show that on average, those with higher levels of education are more likely to care about climate change.
+
 - How can your analysis be improved if you had access to unlimited data?
 
+If we had access to unlimited data, it would be useful to look at the majors and intended majors of those that have went to college to see what effect the field the person is studying has on their view of climate change. We expect that this likely has a strong effect as students would be taking very different classes depending on what they decide to study. Furthermore, we would also like to have data on other potential cofounders such as poltical party and race to see how the effect varies across different subsets of the population.
 
 # Individual contributions
 
